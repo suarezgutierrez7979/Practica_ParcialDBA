@@ -1,0 +1,50 @@
+Instrucciones
+
+1. Cree un tablespace con un espacio pequeño (50M está bien) y un usuario con permisos de conexión, dba y con espacio ilimitado en ese tablespace 
+2. Conéctese con ese usuario 
+3. Al final exporte como se indica en la imagen https://media.giphy.com/media/3ohs7N8c20knoGif84/giphy.gif   
+	- Paso 1: http://oi64.tinypic.com/161z5vk.jpg   
+	- Paso 2: http://oi64.tinypic.com/28rd5bm.jpg   
+
+La alcaldía de Medellín ha decidido lanzar un programa para tapar los huecos de las calles mediante su programa
+"HuecosMed" y por esa razón tiene una base de datos donde relaciona los huecos con su ubicación, el estado y un
+encargado, por otro lado tiene una tabla encargados donde relaciona las personas asignadas que son responsables de cada
+hueco con sus datos básicos.
+
+http://oi63.tinypic.com/x2w0eh.jpg
+
+Copie, pegue y ejecute el siguiente script: https://gist.githubusercontent.com/amartinezg/fc13979fd5fead578811d5622b8688
+ce/raw/ac9f6c454a726cf5021c244aa13a8d0a6bdce2a0/export.sql
+
+1. Cree una vista con el nombre "HUECOS_PENDIENTES_Y_ESTUDIO" la cual traiga las siguientes columnas: "CANTIDAD_HUECOS",
+"APELLIDOS", "CODIGO_INTERNO". La vista como su nombre lo indica debe traer el número de
+huecos que se encuentran pendientes y en estudio agrupados por responsable y los datos de cada persona (apellidos, código interno). Los datos deben estar ordenados por la cantidad de huecos en orden ascendente
+
+Usted deberá obtener lo siguiente:
+
+2	Hawkins	BEC82652-A91A-D631-DB42-1BFBC98B24EE
+2	Dorsey	DAE39FFB-989A-0FE7-9EFC-A78AA2D63F66
+4	Nguyen	2C3B0E7C-FE4F-1AF3-BE4F-FA1F770E6208
+5	Wiggins	E01032F7-EE75-63C5-C51A-C895A20AD5EE
+6	Payne	6A9BBD3F-B2ED-D5D4-753F-ADD515EB7DBC
+8	Everett	4693C146-6BD4-5579-702F-58DCD6B57CE4
+8	Schwartz	1469A163-4596-71D1-1802-857E855D5394
+8	Nash	B74CDE9F-BF35-CB40-0015-FF900DD92214
+10	Vance	8745E2EF-A4A5-FA1F-E2B9-226436E7646F
+12	Ford	4580DAB7-743A-BE26-3AB3-AA08A7AA14EB
+
+
+2. Cree una vista con el nombre "CANTIDAD_HUECOS_BLOQUEADOS" la cual traiga las siguientes columnas: "CANTIDAD_HUECOS", "ENCARGADO_ID", "NOMBRES", "APELLIDOS", "CODIGO_INTERNO". La vista como su nombre lo indica debe traer el listado de huecos que se encuentran bloqueados agrupados por responsable y los datos de cada persona. Los datos deben estar ordenados por la cantidad de huecos en orden descendente.
+
+Usted deberá obtener lo siguiente:
+
+8 4 MacKensie Vance 8745E2EF-A4A5-FA1F-E2B9-226436E7646F
+7 3 Kylee Payne 6A9BBD3F-B2ED-D5D4-753F-ADD515EB7DBC
+7 9 Megan Nash  B74CDE9F-BF35-CB40-0015-FF900DD92214
+5 8 Cain  Everett 4693C146-6BD4-5579-702F-58DCD6B57CE4
+5 5 Ivy Dorsey  DAE39FFB-989A-0FE7-9EFC-A78AA2D63F66
+4 7 Ezra  Nguyen  2C3B0E7C-FE4F-1AF3-BE4F-FA1F770E6208
+3 6 Lydia Wiggins E01032F7-EE75-63C5-C51A-C895A20AD5EE
+3 2 Pearl Hawkins BEC82652-A91A-D631-DB42-1BFBC98B24EE
+2 10  Cameron Ford  4580DAB7-743A-BE26-3AB3-AA08A7AA14EB
+1 1 Geoffrey  Schwartz  1469A163-4596-71D1-1802-857E855D5394

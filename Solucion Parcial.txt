@@ -1,0 +1,80 @@
+1. Cree un tablespace con un espacio pequeño (50M está bien) y un usuario con permisos de conexión, dba y con espacio ilimitado en ese tablespace 
+
+	alter session set "_ORACLE_SCRIPT"=true; (En caso de que nos de problemas para crear los usuarios y los perfiles en oracle ejecutar esta linea de codigo)
+
+	CREATE TABLESPACE parcial_manana datafile 'PARCIAL1' size 50M
+
+	CREATE USER Mauricio
+	IDENTIFIED BY qwe123
+	DEFAULT TABLESPACE parcial_manana
+	QUOTA UNLIMITED ON parcial_manana
+	PASSWORD expire
+	ACCOUNT unlock
+	PROFILE estudiante_parcial
+
+	
+	CREATE PROFILE estudiante_parcial LIMIT
+	CPU_PER_SESSION UNLIMITED
+	SESSIONS_PER_USER 3 
+	CONNECT_TIME 60
+	IDLE_TIME UNLIMITED
+
+	GRANT DBA TO Mauricio 
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+CREAMOS LAS TABLA E INTRODUCIMOS LOS DATOS EN LAS TABLAS Y LAS RELACIONAMOS
+
+CREATE TABLE "ENCARGADOS" 
+   (	"ID" NUMBER PRIMARY KEY, 
+	"NOMBRES" VARCHAR2(255) DEFAULT NULL, 
+	"APELLIDOS" VARCHAR2(255) DEFAULT NULL, 
+	"CODIGO_INTERNO" VARCHAR2(36)
+   ) ;
+
+CREATE TABLE "HUECOS" 
+   (	"ID" NUMBER DEFAULT NULL, 
+	"ESTADO" VARCHAR2(255) DEFAULT NULL, 
+	"ENCARGADO_ID" NUMBER, 
+	"LATITUD" VARCHAR2(255), 
+	"LONGITUD" VARCHAR2(255)
+   ) ;
+   
+   -- CREAMOS LA RELACION DE AMBAS TABLAS DE LA TABLA HUECOS CON LA CLAVE PRIMARIA ENCARGADOS ---
+   
+   ALTER TABLE HUECOS 
+   ADD CONSTRAINT FK_ENCARGADO_ID
+   FOREIGN KEY (ENCARGADO_ID)
+   REFERENCES ENCARGADOS(ID);
+
+Copie, pegue y ejecute el siguiente script: https://gist.githubusercontent.com/amartinezg/fc13979fd5fead578811d5622b8688
+ce/raw/ac9f6c454a726cf5021c244aa13a8d0a6bdce2a0/export.sql (En este link estan los datos para insertar en la base de datos)
+
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+1. Cree una vista con el nombre "HUECOS_PENDIENTES_Y_ESTUDIO" la cual traiga las siguientes columnas: "CANTIDAD_HUECOS",
+"APELLIDOS", "CODIGO_INTERNO". La vista como su nombre lo indica debe traer el número dehuecos que se encuentran pendientes y en estudio 
+agrupados por responsable y los datos de cada persona (apellidos, código interno). Los datos deben estar ordenados por la cantidad de huecos 
+en orden ascendente
+
+CREATE VIEW HUECOS_PENDIENTES_Y_ESTUDIO AS
+SELECT E.APELLIDOS ,E.CODIGO_INTERNO, H.ESTADO, COUNT(E.APELLIDOS) OVER (PARTITION BY E.APELLIDOS)APELLIDO_COUNT
+FROM ENCARGADOS E INNER JOIN HUECOS H
+ON H.ENCARGADO_ID=E.ID
+WHERE H.ESTADO='PENDIENTE';
+
+
+2. Cree una vista con el nombre "CANTIDAD_HUECOS_BLOQUEADOS" la cual traiga las siguientes columnas: "CANTIDAD_HUECOS", "ENCARGADO_ID", "NOMBRES", "APELLIDOS", "CODIGO_INTERNO". La vista como su nombre lo indica debe traer el listado de huecos que se encuentran bloqueados agrupados por responsable y los datos de cada 
+persona. Los datos deben estar ordenados por la cantidad de huecos en orden descendente.
+
+CREATE VIEW CANTIDAD_HUECOS_BLOQUEADOS AS 
+SELECT E.APELLIDOS ,E.NOMBRES, E.CODIGO_INTERNO, H.ESTADO, H.ENCARGADO_ID, COUNT(H.ENCARGADO_ID) OVER (PARTITION BY ENCARGADO_ID)ENCARGADO_COUNT
+FROM ENCARGADOS E INNER JOIN HUECOS H
+ON H.ENCARGADO_ID=E.ID
+WHERE H.ESTADO='BLOQUEADO';
+   
+
+
+
